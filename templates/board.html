@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Notification Board</h2>
+<div id="board">
+  {% for r in reports %}
+    <div class="report">
+      <p><b>Phone:</b> {{ r.phone }}</p>
+      <p><b>Member:</b> {{ r.code }}</p>
+      <p><b>Description:</b> {{ r.desc }}</p>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

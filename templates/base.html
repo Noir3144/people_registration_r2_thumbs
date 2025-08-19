@@ -1,34 +1,12 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>People Registration</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script defer src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
-  <header class="topbar glass">
-    <div class="brand">People Portal</div>
-    <nav>
-      <a href="{{ url_for('index') }}">Register</a>
-      <a href="{{ url_for('report') }}">Report Missing</a>
-      <a href="#" id="notif-btn">Notifications</a>
-    </nav>
-  </header>
-  <main class="container">
+  <div class="container">
     {% block content %}{% endblock %}
-  </main>
-
-  <div id="notif-modal" class="modal hidden">
-    <div class="modal-card glass">
-      <div class="modal-head">
-        <h3>Notification Board</h3>
-        <button id="close-notif" class="icon-btn">×</button>
-      </div>
-      <div id="notif-list" class="notif-list grid"></div>
-    </div>
   </div>
 </body>
 </html>

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Select Language</h2>
+<ul>
+  <li><a href="{{ url_for('set_language', lang='English') }}">English</a></li>
+  <li><a href="{{ url_for('set_language', lang='Hindi') }}">हिन्दी</a></li>
+  <li><a href="{{ url_for('set_language', lang='Bengali') }}">বাংলা</a></li>
+  <li><a href="{{ url_for('set_language', lang='Tamil') }}">தமிழ்</a></li>
+  <li><a href="{{ url_for('set_language', lang='Telugu') }}">తెలుగు</a></li>
+</ul>
+{% endblock %}
