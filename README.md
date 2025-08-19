@@ -1,0 +1,1 @@
+# people_registration_r2_thumbs
