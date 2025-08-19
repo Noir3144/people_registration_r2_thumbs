@@ -1,0 +1,30 @@
+
+{% extends "base.html" %}
+{% block content %}
+<section class="card glass">
+  <h2>Family Registration</h2>
+  <form id="reg-form" action="/register" method="post" enctype="multipart/form-data">
+    <div class="grid-2">
+      <div class="form-field">
+        <label>Mobile No.</label>
+        <input type="tel" name="phone" required placeholder="+91XXXXXXXXXX">
+      </div>
+      <div class="form-field">
+        <label>WhatsApp No.</label>
+        <input type="tel" name="whatsapp" required placeholder="+91XXXXXXXXXX">
+      </div>
+      <div class="form-field">
+        <label>Secondary No. (optional)</label>
+        <input type="tel" name="secondary" placeholder="+91XXXXXXXXXX">
+      </div>
+    </div>
+
+    <div class="slots-head"><strong>Photos (max 20): p1..p20</strong></div>
+    <div id="camera-slots" class="slots"></div>
+
+    <div class="actions">
+      <button type="submit" class="btn">Submit Registration</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

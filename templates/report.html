@@ -1,0 +1,30 @@
+
+{% extends "base.html" %}
+{% block content %}
+<section class="card glass">
+  <h2>Report Missing Person</h2>
+  <form action="/report" method="post">
+    <div class="grid-2">
+      <div class="form-field">
+        <label>Registered Mobile No.</label>
+        <input type="tel" name="phone" required placeholder="+91XXXXXXXXXX">
+      </div>
+      <div class="form-field">
+        <label>WhatsApp No.</label>
+        <input type="tel" name="whatsapp" required placeholder="+91XXXXXXXXXX">
+      </div>
+      <div class="form-field">
+        <label>Missing Member Code</label>
+        <input type="text" name="missing_code" required placeholder="p2">
+      </div>
+    </div>
+    <div class="form-field">
+      <label>Description (optional)</label>
+      <textarea name="description" rows="3" placeholder="Where last seen, clothes, other notes"></textarea>
+    </div>
+    <div class="actions">
+      <button type="submit" class="btn">Submit Missing Report</button>
+    </div>
+  </form>
+</section>
+{% endblock %}
