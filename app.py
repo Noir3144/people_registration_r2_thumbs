@@ -1,144 +1,111 @@
 import os
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify
+from werkzeug.utils import secure_filename
 import boto3
-from botocore.client import Config
 from twilio.rest import Client
-import traceback
 
+# ------------------- CONFIG -------------------
 app = Flask(__name__)
 
-# ----------------------------
-# Cloudflare R2 Setup
-# ----------------------------
-R2_BUCKET = os.getenv("R2_BUCKET")
+# Cloudflare R2 (S3 compatible)
 R2_ENDPOINT = os.getenv("R2_ENDPOINT")
-R2_ACCESS_KEY_ID = os.getenv("R2_ACCESS_KEY_ID")
-R2_SECRET_ACCESS_KEY = os.getenv("R2_SECRET_ACCESS_KEY")
+R2_ACCESS_KEY = os.getenv("R2_ACCESS_KEY")
+R2_SECRET_KEY = os.getenv("R2_SECRET_KEY")
+R2_BUCKET = os.getenv("R2_BUCKET")
 
 s3 = boto3.client(
     "s3",
     endpoint_url=R2_ENDPOINT,
-    aws_access_key_id=R2_ACCESS_KEY_ID,
-    aws_secret_access_key=R2_SECRET_ACCESS_KEY,
-    config=Config(signature_version="s3v4"),
-    region_name="auto",
+    aws_access_key_id=R2_ACCESS_KEY,
+    aws_secret_access_key=R2_SECRET_KEY
 )
 
-# ----------------------------
-# Twilio WhatsApp Setup
-# ----------------------------
+# Twilio WhatsApp
 TWILIO_SID = os.getenv("TWILIO_SID")
 TWILIO_AUTH = os.getenv("TWILIO_AUTH")
-TWILIO_WHATSAPP = os.getenv("TWILIO_WHATSAPP")
+TWILIO_WHATSAPP = os.getenv("TWILIO_WHATSAPP")  # e.g. "whatsapp:+14155238886"
 
-twilio_client = None
-if TWILIO_SID and TWILIO_AUTH:
-    twilio_client = Client(TWILIO_SID, TWILIO_AUTH)
-
+# ------------------- ROUTES -------------------
 
 @app.route("/")
 def language():
     return render_template("language.html")
 
-
 @app.route("/index/<lang>")
 def index(lang):
     return render_template("index.html", lang=lang)
 
-
-@app.route("/missing")
-def missing():
-    # Temporary placeholder until missing.html exists
+@app.route("/register", methods=["POST"])
+def register():
     try:
-        return render_template("missing.html")
-    except:
-        return "<h2>Missing report page coming soon...</h2>"
+        phone = request.form.get("phone")
+        whatsapp = request.form.get("whatsapp")
+        secondary = request.form.get("secondary")
 
+        if not phone or not whatsapp:
+            return jsonify({"status": "error", "message": "Phone and WhatsApp are required"}), 400
 
-@app.route("/notifications")
-def notifications():
-    return render_template("notifications.html", reports=[])
+        photos = request.files.getlist("photos")
+        uploaded = []
 
-
-# ----------------------------
-# Registration Upload
-# ----------------------------
-@app.route("/submit_registration", methods=["POST"])
-def submit_registration():
-    try:
-        # Fallback field handling
-        mobile = request.form.get("mobile") or request.form.get("mobileNumber")
-        whatsapp = request.form.get("whatsapp") or request.form.get("whatsappNumber")
-        secondary = request.form.get("secondary") or request.form.get("secondaryContact")
-
-        if not mobile or not whatsapp:
-            return jsonify({"status": "error", "message": "Mobile and WhatsApp are required"}), 400
-
-        folder = f"Registration/{mobile}/"
-
-        # Save uploaded photos
-        incoming_files = request.files.getlist("photos") or request.files.getlist("photos[]")
-        for idx, file in enumerate(incoming_files):
-            if file:
+        for idx, file in enumerate(photos):
+            if file and file.filename:  # ✅ skip empty slots
                 ext = os.path.splitext(file.filename)[1] or ".jpg"
                 filename = f"p{idx+1}{ext}"
-                s3.upload_fileobj(file, R2_BUCKET, folder + filename)
+                key = f"Registration/{phone}/{filename}"
+                s3.upload_fileobj(file, R2_BUCKET, key)
+                uploaded.append(filename)
 
-        # WhatsApp confirmation
-        if twilio_client:
-            try:
-                twilio_client.messages.create(
-                    from_=f"whatsapp:{TWILIO_WHATSAPP}",
-                    to=f"whatsapp:{whatsapp}",
-                    body=f"✅ Registration successful!\nReopen: https://{request.host}/index/en",
-                )
-            except Exception as twilio_err:
-                print("Twilio error:", twilio_err)
+        # ✅ WhatsApp confirmation
+        if TWILIO_SID and TWILIO_AUTH and TWILIO_WHATSAPP:
+            client = Client(TWILIO_SID, TWILIO_AUTH)
+            msg = f"✅ Registration successful!\n\nPhone: {phone}\nUploaded: {len(uploaded)} photos.\n\nReopen portal: https://people-registration-r2-thumbs.onrender.com"
+            client.messages.create(
+                from_=TWILIO_WHATSAPP,
+                body=msg,
+                to=f"whatsapp:+{whatsapp}"
+            )
 
-        return jsonify({"status": "success"})
+        return jsonify({"status": "success", "message": "Registration complete", "photos": uploaded})
 
     except Exception as e:
-        print("Registration error:", e)
-        traceback.print_exc()
+        app.logger.error(f"Registration error: {str(e)}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
-# ----------------------------
-# Missing Report
-# ----------------------------
-@app.route("/submit_missing", methods=["POST"])
-def submit_missing():
+@app.route("/report_missing", methods=["GET", "POST"])
+def report_missing():
+    if request.method == "GET":
+        return render_template("report_missing.html")
+
     try:
-        phone = request.form.get("mobile") or request.form.get("mobileNumber")
-        whatsapp = request.form.get("whatsapp") or request.form.get("whatsappNumber")
-        member_code = request.form.get("member_code")
-        description = request.form.get("description", "")
+        phone = request.form.get("phone")
+        whatsapp = request.form.get("whatsapp")
+        missing_code = request.form.get("missing_code")
 
-        if not phone or not whatsapp or not member_code:
-            return jsonify({"status": "error", "message": "Missing required fields"}), 400
+        if not phone or not missing_code:
+            return jsonify({"status": "error", "message": "Phone and missing code are required"}), 400
 
-        reg_folder = f"Registration/{phone}/"
-        miss_folder = f"Missing/{phone}/"
+        # Copy file from registration to missing folder
+        src_key = f"Registration/{phone}/{missing_code}"
+        dst_key = f"Missing/{phone}/{missing_code}"
 
-        # Copy missing member photo
-        objects = s3.list_objects_v2(Bucket=R2_BUCKET, Prefix=reg_folder)
-        if "Contents" in objects:
-            for obj in objects["Contents"]:
-                if obj["Key"].endswith(member_code):
-                    copy_source = {"Bucket": R2_BUCKET, "Key": obj["Key"]}
-                    s3.copy(copy_source, R2_BUCKET, miss_folder + member_code)
+        copy_source = {"Bucket": R2_BUCKET, "Key": src_key}
+        s3.copy(copy_source, R2_BUCKET, dst_key)
 
-        # Save description
-        desc_key = miss_folder + member_code.replace(".", "_") + ".txt"
-        s3.put_object(Bucket=R2_BUCKET, Key=desc_key, Body=description)
-
-        return jsonify({"status": "success"})
+        return jsonify({"status": "success", "message": f"{missing_code} reported missing"})
 
     except Exception as e:
-        print("Missing report error:", e)
-        traceback.print_exc()
+        app.logger.error(f"Missing report error: {str(e)}")
         return jsonify({"status": "error", "message": str(e)}), 500
 
 
+@app.route("/board")
+def board():
+    # TODO: List missing reports from R2
+    return render_template("board.html")
+
+
+# ------------------- MAIN -------------------
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    app.run(host="0.0.0.0", port=5000)
