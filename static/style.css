@@ -1,3 +1,125 @@
-body { background: #000; color: #fff; font-family: sans-serif; }
-.container { max-width: 600px; margin: auto; padding: 20px; backdrop-filter: blur(10px); background: rgba(255,255,255,0.1); border-radius: 12px; }
-button { margin-top: 10px; padding: 10px; border: none; border-radius: 8px; background: #444; color: white; }
+:root{
+  --bg:#0b0b0c;
+  --glass:rgba(255,255,255,0.08);
+  --glass-strong:rgba(255,255,255,0.16);
+  --txt:#f5f7fb;
+  --muted:#b6bcc9;
+  --pri:#6ea8fe;
+  --ok:#3ecf8e;
+  --warn:#f7b955;
+  --danger:#ff6b6b;
+  --radius:18px;
+  --shadow:0 10px 30px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background: radial-gradient(1200px 600px at 10% -20%, #1a1a1f 0%, var(--bg) 45%) fixed;
+  color:var(--txt); font:16px/1.5 -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Inter,system-ui,sans-serif;
+}
+
+.nav{
+  position:sticky; top:0; display:flex; align-items:center; justify-content:space-between;
+  gap:16px; padding:12px 18px; margin:0 auto 24px; max-width:1100px;
+  backdrop-filter:saturate(140%) blur(14px);
+  background:linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.15); border-radius:14px; box-shadow:var(--shadow);
+}
+.nav .brand{font-weight:700; letter-spacing:.2px}
+.nav a{color:var(--txt); text-decoration:none; opacity:.9; margin:0 8px; padding:8px 10px; border-radius:12px}
+.nav a:hover{background:var(--glass-strong)}
+
+.container{max-width:1100px; margin:24px auto 64px; padding:0 16px}
+.card{
+  padding:22px 22px 26px; border-radius:var(--radius);
+  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.16);
+  backdrop-filter: blur(16px) saturate(160%);
+  box-shadow:var(--shadow)
+}
+.title{margin:6px 2px 8px; font-size:26px}
+.subtitle{margin:0 2px 14px; color:var(--muted)}
+.muted{color:var(--muted)}
+.req{color:var(--danger); margin-left:4px}
+
+.stack{display:grid; gap:16px}
+.grid-2{display:grid; gap:16px}
+@media(min-width:720px){ .grid-2{grid-template-columns:1fr 1fr} }
+
+.field{display:grid; gap:8px}
+.field input,.field textarea{
+  width:100%; padding:12px 14px; color:var(--txt); background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14); border-radius:14px; outline:none; transition:.2s ease;
+}
+.field input:focus,.field textarea:focus{border-color:var(--pri); box-shadow:0 0 0 3px rgba(110,168,254,.25)}
+
+.section{display:grid; gap:12px}
+.section-head{display:flex; align-items:center; justify-content:space-between}
+
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:10px 14px; border-radius:14px; border:1px solid transparent; cursor:pointer;
+  transition:transform .12s ease, background .2s ease, border .2s ease, opacity .2s ease;
+  user-select:none;
+}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:linear-gradient(180deg,#76b0ff,#5a94f4); color:#03152d}
+.btn.secondary{background:rgba(255,255,255,.10); border-color:rgba(255,255,255,.14); color:var(--txt)}
+.btn.danger{background:linear-gradient(180deg,#ff8b8b,#f45b5b); color:#2b0b0b}
+.btn.ghost{background:transparent; border-color:rgba(255,255,255,.14); color:var(--txt)}
+.btn:hover{opacity:.95}
+
+.photo-grid{
+  display:grid; gap:12px; grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+}
+.slot{
+  position:relative; border-radius:16px; border:1px dashed rgba(255,255,255,.25);
+  background:rgba(255,255,255,.06); aspect-ratio:3/4; overflow:hidden;
+  display:flex; align-items:center; justify-content:center; color:var(--muted);
+  transition:border .2s ease, transform .2s ease, background .2s ease;
+}
+.slot:hover{transform:translateY(-2px); background:rgba(255,255,255,.09)}
+.slot img{width:100%; height:100%; object-fit:cover; display:block}
+.slot .badge{
+  position:absolute; top:8px; left:8px; font-size:12px; background:rgba(0,0,0,.55);
+  padding:4px 8px; border-radius:10px; border:1px solid rgba(255,255,255,.15)
+}
+.slot .toolbar{
+  position:absolute; inset:auto 6px 6px 6px; display:flex; gap:6px; justify-content:center;
+}
+.slot .toolbar .btn{padding:6px 8px; border-radius:10px; font-size:12px}
+
+.actions{display:flex; gap:10px; justify-content:flex-end; margin-top:4px}
+
+.lang-grid{
+  display:grid; gap:10px; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); margin-top:8px
+}
+.chip{
+  display:inline-flex; align-items:center; justify-content:center; padding:10px 12px;
+  border-radius:12px; text-decoration:none; color:var(--txt); background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+}
+.chip:hover{background:rgba(255,255,255,.14)}
+
+.help{color:var(--muted); margin:2px 0 8px}
+
+.toast{
+  position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(120%);
+  background:rgba(20,22,26,.9); color:var(--txt); padding:12px 16px; border-radius:12px;
+  border:1px solid rgba(255,255,255,.18); box-shadow:var(--shadow); transition:transform .26s ease;
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+.report-list{display:grid; gap:12px}
+.report-tile{border-radius:16px; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.07); padding:14px}
+.report-body .desc{color:var(--muted); margin-top:6px}
+
+/* Animations */
+.fade-in-down{animation:fid .45s ease both}
+@keyframes fid{from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:translateY(0)}}
+.fade-in-up{animation:fiu .45s ease both}
+@keyframes fiu{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)}}
+.rise{animation:rise .5s ease .05s both}
+@keyframes rise{from{opacity:0; transform:translateY(12px)} to{opacity:1; transform:translateY(0)}}
+.glass{backdrop-filter:saturate(160%) blur(14px)}

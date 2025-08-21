@@ -1,19 +1,44 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Registration Form ({{ lang }})</h2>
-<form id="regForm" action="/register" method="POST" enctype="multipart/form-data">
-  <label>Mobile Number*</label>
-  <input type="text" name="mobile" required>
+<section class="card glass rise">
+  <h1 class="title">Registration Form <span class="muted">({{ lang }})</span></h1>
 
-  <label>WhatsApp Number*</label>
-  <input type="text" name="whatsapp" required>
+  <form id="regForm" class="stack" action="/submit_registration" method="POST" enctype="multipart/form-data">
+    <div class="grid-2">
+      <label class="field">
+        <span>Mobile Number<span class="req">*</span></span>
+        <input type="tel" name="mobile" required inputmode="numeric" placeholder="e.g., 9406210551" />
+      </label>
 
-  <label>Secondary Contact</label>
-  <input type="text" name="secondary">
+      <label class="field">
+        <span>WhatsApp Number<span class="req">*</span></span>
+        <input type="tel" name="whatsapp" required inputmode="numeric" placeholder="e.g., +919406210551" />
+      </label>
+    </div>
 
-  <div id="photoSlots"></div>
-  <button type="button" id="addPhoto">+ Add Photo</button>
+    <label class="field">
+      <span>Secondary Contact</span>
+      <input type="tel" name="secondary" inputmode="numeric" placeholder="Optional" />
+    </label>
 
-  <button type="submit">Submit Application</button>
-</form>
+    <div class="section">
+      <div class="section-head">
+        <h2 class="subtitle">Photos (Max 20)</h2>
+        <button type="button" id="addPhotoBtn" class="btn secondary">+ Add Photo</button>
+      </div>
+
+      <p class="help">Tap a slot to open your camera. Each slot is auto-named as p1, p2, …</p>
+
+      <!-- Photo Grid -->
+      <div id="photoGrid" class="photo-grid"></div>
+
+      <!-- Hidden container for file inputs (all share name='photos') -->
+      <div id="fileInputs" hidden></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn primary" type="submit">Submit Application</button>
+    </div>
+  </form>
+</section>
 {% endblock %}

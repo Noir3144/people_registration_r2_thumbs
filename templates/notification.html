@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card glass rise">
+  <h1 class="title">Notification Board</h1>
+  {% if not reports or reports|length == 0 %}
+    <p class="muted">Reports will appear here once submitted.</p>
+  {% else %}
+    <div class="report-list">
+      {% for r in reports %}
+        <article class="report-tile fade-in-up">
+          <div class="report-body">
+            <div><b>Phone:</b> {{ r.phone }}</div>
+            <div><b>Member:</b> {{ r.code }}</div>
+            <div class="desc">{{ r.desc }}</div>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

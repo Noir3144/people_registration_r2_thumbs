@@ -1,19 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Report Missing</h2>
-<form action="/report" method="POST">
-  <label>Your Mobile Number*</label>
-  <input type="text" name="mobile" required>
+<section class="card glass rise">
+  <h1 class="title">Report Missing</h1>
+  <p class="help">Provide the phone number used during registration and the member code (e.g., <b>p2</b>). The system will locate that photo and copy it into the Missing reports folder.</p>
 
-  <label>Your WhatsApp Number*</label>
-  <input type="text" name="whatsapp" required>
+  <form id="missingForm" class="stack" action="/submit_missing" method="POST">
+    <div class="grid-2">
+      <label class="field">
+        <span>Your Mobile Number<span class="req">*</span></span>
+        <input type="tel" name="mobile" required inputmode="numeric" placeholder="e.g., 9406210551" />
+      </label>
 
-  <label>Missing Member Code (e.g., p2)</label>
-  <input type="text" name="missing" required>
+      <label class="field">
+        <span>Your WhatsApp Number<span class="req">*</span></span>
+        <input type="tel" name="whatsapp" required inputmode="numeric" placeholder="e.g., +919406210551" />
+      </label>
+    </div>
 
-  <label>Description</label>
-  <textarea name="desc"></textarea>
+    <label class="field">
+      <span>Missing Member Code<span class="req">*</span></span>
+      <input type="text" name="member_code" required placeholder="p2" />
+    </label>
 
-  <button type="submit">Report Missing</button>
-</form>
+    <label class="field">
+      <span>Description</span>
+      <textarea name="description" rows="3" placeholder="When/where last seen, clothing, etc."></textarea>
+    </label>
+
+    <div class="actions">
+      <button class="btn danger" type="submit">Submit Missing Report</button>
+    </div>
+  </form>
+</section>
 {% endblock %}
