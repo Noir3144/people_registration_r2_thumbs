@@ -1,29 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>People Registration</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>People Registry</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <header class="nav glass fade-in-down">
-    <div class="brand">People Registry</div>
-    <nav>
-      <a href="{{ url_for('language') }}">Languages</a>
-      <a href="{{ url_for('index', lang='English') }}">Register</a>
-      <a href="{{ url_for('missing') }}">Report Missing</a>
-      <a href="{{ url_for('notifications') }}">Board</a>
-    </nav>
-  </header>
+    <header>
+        <nav class="navbar">
+            <div class="logo">People Registry</div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('language') }}">Languages</a></li>
+                <li><a href="{{ url_for('index', lang='English') }}">Register</a></li>
+                <li><a href="{{ url_for('report_missing') }}">Report Missing</a></li>
+                <li><a href="{{ url_for('board') }}">Board</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <main class="container">
-    {% block content %}{% endblock %}
-  </main>
-
-  <!-- Toast -->
-  <div id="toast" class="toast" aria-live="polite"></div>
-
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 </body>
 </html>

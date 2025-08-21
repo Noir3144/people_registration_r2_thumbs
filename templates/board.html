@@ -1,13 +1,27 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h2>Notification Board</h2>
-<div id="board">
-  {% for r in reports %}
-    <div class="report">
-      <p><b>Phone:</b> {{ r.phone }}</p>
-      <p><b>Member:</b> {{ r.code }}</p>
-      <p><b>Description:</b> {{ r.desc }}</p>
+<div class="container">
+    <h2>Registered People Board</h2>
+    <div class="board">
+        {% if people %}
+            <ul>
+                {% for person in people %}
+                    <li>
+                        <strong>{{ person.name }}</strong> — {{ person.mobile }}
+                        {% if person.photos %}
+                            <div class="photo-list">
+                                {% for photo in person.photos %}
+                                    <img src="{{ photo }}" alt="photo of {{ person.name }}">
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No registrations yet.</p>
+        {% endif %}
     </div>
-  {% endfor %}
 </div>
 {% endblock %}

@@ -1,35 +1,23 @@
 {% extends "base.html" %}
+
 {% block content %}
-<section class="card glass rise">
-  <h1 class="title">Report Missing</h1>
-  <p class="help">Provide the phone number used during registration and the member code (e.g., <b>p2</b>). The system will locate that photo and copy it into the Missing reports folder.</p>
+<div class="container">
+    <h2>Report Missing Person</h2>
+    <form action="{{ url_for('report_missing') }}" method="POST" enctype="multipart/form-data" class="form-box">
 
-  <form id="missingForm" class="stack" action="/submit_missing" method="POST">
-    <div class="grid-2">
-      <label class="field">
-        <span>Your Mobile Number<span class="req">*</span></span>
-        <input type="tel" name="mobile" required inputmode="numeric" placeholder="e.g., 9406210551" />
-      </label>
+        <label for="name">Missing Person Name:</label>
+        <input type="text" name="name" required>
 
-      <label class="field">
-        <span>Your WhatsApp Number<span class="req">*</span></span>
-        <input type="tel" name="whatsapp" required inputmode="numeric" placeholder="e.g., +919406210551" />
-      </label>
-    </div>
+        <label for="last_seen">Last Seen Location:</label>
+        <input type="text" name="last_seen" required>
 
-    <label class="field">
-      <span>Missing Member Code<span class="req">*</span></span>
-      <input type="text" name="member_code" required placeholder="p2" />
-    </label>
+        <label for="contact">Your Contact:</label>
+        <input type="text" name="contact" required>
 
-    <label class="field">
-      <span>Description</span>
-      <textarea name="description" rows="3" placeholder="When/where last seen, clothing, etc."></textarea>
-    </label>
+        <label for="photo">Upload Photo:</label>
+        <input type="file" name="photo" accept="image/*">
 
-    <div class="actions">
-      <button class="btn danger" type="submit">Submit Missing Report</button>
-    </div>
-  </form>
-</section>
+        <button type="submit" class="btn">Report</button>
+    </form>
+</div>
 {% endblock %}

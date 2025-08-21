@@ -1,23 +1,12 @@
 {% extends "base.html" %}
-{% block content %}
-<section class="card glass rise">
-  <h1 class="title">Select Language</h1>
-  <p class="subtitle">Choose your preferred language to continue.</p>
 
-  <div class="lang-grid">
-    <a class="chip" href="{{ url_for('index', lang='English') }}">English</a>
-    <a class="chip" href="{{ url_for('index', lang='Hindi') }}">हिन्दी</a>
-    <a class="chip" href="{{ url_for('index', lang='Bengali') }}">বাংলা</a>
-    <a class="chip" href="{{ url_for('index', lang='Marathi') }}">मराठी</a>
-    <a class="chip" href="{{ url_for('index', lang='Tamil') }}">தமிழ்</a>
-    <a class="chip" href="{{ url_for('index', lang='Telugu') }}">తెలుగు</a>
-    <a class="chip" href="{{ url_for('index', lang='Gujarati') }}">ગુજરાતી</a>
-    <a class="chip" href="{{ url_for('index', lang='Kannada') }}">ಕನ್ನಡ</a>
-    <a class="chip" href="{{ url_for('index', lang='Malayalam') }}">മലയാളം</a>
-    <a class="chip" href="{{ url_for('index', lang='Punjabi') }}">ਪੰਜਾਬੀ</a>
-    <a class="chip" href="{{ url_for('index', lang='Odia') }}">ଓଡ଼ିଆ</a>
-    <a class="chip" href="{{ url_for('index', lang='Assamese') }}">অসমীয়া</a>
-    <a class="chip" href="{{ url_for('index', lang='Urdu') }}">اردو</a>
-  </div>
-</section>
+{% block content %}
+<div class="container">
+    <h2>Select Your Language</h2>
+    <div class="language-options">
+        <a href="{{ url_for('index', lang='English') }}" class="btn">English</a>
+        <a href="{{ url_for('index', lang='Hindi') }}" class="btn">हिन्दी</a>
+        <a href="{{ url_for('index', lang='Bengali') }}" class="btn">বাংলা</a>
+    </div>
+</div>
 {% endblock %}

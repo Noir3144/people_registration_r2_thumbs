@@ -1,44 +1,26 @@
 {% extends "base.html" %}
+
 {% block content %}
-<section class="card glass rise">
-  <h1 class="title">Registration Form <span class="muted">({{ lang }})</span></h1>
+<div class="container">
+    <h2>Registration Form ({{ lang }})</h2>
+    <form action="{{ url_for('register', lang=lang) }}" method="POST" enctype="multipart/form-data" class="form-box">
 
-  <form id="regForm" class="stack" action="/submit_registration" method="POST" enctype="multipart/form-data">
-    <div class="grid-2">
-      <label class="field">
-        <span>Mobile Number<span class="req">*</span></span>
-        <input type="tel" name="mobile" required inputmode="numeric" placeholder="e.g., 9406210551" />
-      </label>
+        <label for="name">Full Name:</label>
+        <input type="text" name="name" required>
 
-      <label class="field">
-        <span>WhatsApp Number<span class="req">*</span></span>
-        <input type="tel" name="whatsapp" required inputmode="numeric" placeholder="e.g., +919406210551" />
-      </label>
-    </div>
+        <label for="mobile">Mobile:</label>
+        <input type="text" name="mobile" required>
 
-    <label class="field">
-      <span>Secondary Contact</span>
-      <input type="tel" name="secondary" inputmode="numeric" placeholder="Optional" />
-    </label>
+        <label for="whatsapp">WhatsApp:</label>
+        <input type="text" name="whatsapp">
 
-    <div class="section">
-      <div class="section-head">
-        <h2 class="subtitle">Photos (Max 20)</h2>
-        <button type="button" id="addPhotoBtn" class="btn secondary">+ Add Photo</button>
-      </div>
+        <label for="secondary">Secondary Phone:</label>
+        <input type="text" name="secondary">
 
-      <p class="help">Tap a slot to open your camera. Each slot is auto-named as p1, p2, …</p>
+        <label for="photos">Upload Photos (Max 20):</label>
+        <input type="file" name="photos" multiple accept="image/*">
 
-      <!-- Photo Grid -->
-      <div id="photoGrid" class="photo-grid"></div>
-
-      <!-- Hidden container for file inputs (all share name='photos') -->
-      <div id="fileInputs" hidden></div>
-    </div>
-
-    <div class="actions">
-      <button class="btn primary" type="submit">Submit Application</button>
-    </div>
-  </form>
-</section>
+        <button type="submit" class="btn">Submit Application</button>
+    </form>
+</div>
 {% endblock %}
